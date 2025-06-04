@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国际课程报名表</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top for better scrolling on smaller screens */
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 768px; /* Max width for larger screens */
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .question-section {
+            margin-bottom: 24px;
+            padding: 16px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        .question-title {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .radio-option:hover {
+            border-color: #6366f1;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.1);
+        }
+        .radio-option input[type="radio"] {
+            margin-right: 12px;
+            accent-color: #6366f1;
+            transform: scale(1.2);
+        }
+        .radio-option.selected {
+            border-color: #4f46e5;
+            background-color: #eef2ff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+        .submit-button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        .submit-button:hover {
+            background-color: #4338ca;
+        }
+        .hidden {
+            display: none;
+        }
+        .message-box {
+            background-color: #ecfdf5;
+            color: #065f46;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #a7f3d0;
+            margin-top: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+        /* Timetable specific styles */
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures rounded corners apply to content */
+        }
+        .timetable-header {
+            background-color: #e0e7ff;
+            font-weight: 600;
+            padding: 8px 4px;
+            text-align: center;
+            font-size: 0.875rem; /* 14px */
+            color: #3730a3;
+        }
+        .timetable-cell {
+            background-color: #f0f4ff;
+            padding: 8px 4px;
+            text-align: center;
+            font-size: 0.875rem; /* 14px */
+            color: #4b5563;
+            min-height: 60px; /* Ensure cells have some height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            word-break: break-word; /* Allow long text to break */
+            line-height: 1.2;
+        }
+        .course-cell {
+            background-color: #bfdbfe; /* Light blue */
+            color: #1e40af; /* Darker blue text */
+            font-weight: 500;
+        }
+        .homework-cell {
+            background-color: #d1fae5; /* Light green */
+            color: #065f46; /* Darker green text */
+            font-weight: 500;
+        }
+        /* Summary display styles */
+        .summary-details-container {
+            background-color: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 24px;
+        }
+        .summary-item {
+            display: flex;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e5e7eb;
+            /* Use flex for equal columns, remove fixed width from label */
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .summary-label {
+            font-weight: 600;
+            color: #374151;
+            text-align: left;
+            flex: 1; /* Take equal space */
+        }
+        .summary-value {
+            color: #4b5563;
+            text-align: left; /* Left-align the value */
+            flex: 1; /* Take equal space */
+            margin-left: 8px; /* Small gap between label and value */
+        }
+        /* Removed .total-time-summary styles as the element is removed */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">国际课程报名表</h1>
+
+        <div class="question-section" id="question1-main-section">
+            <h2 class="question-title">1. 学员需要提升哪个项目？</h2>
+            <div class="options-group" id="program-options">
+                <label class="radio-option">
+                    <input type="radio" name="program" value="IBDP"> IBDP (国际文凭大学预科项目)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="program" value="MYP"> MYP (国际文凭中学项目)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="PYP"> PYP (国际文凭小学项目)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="program" value="AP"> AP (美国大学预修课程)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="program" value="SAT"> SAT (美国大学入学考试)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="program" value="SSAT"> SSAT (美加私立中学入学考试)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="program" value="GCSE/IGCSE"> GCSE/IGCSE (英国普通中等教育证书)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="program" value="A-LEVEL"> A-LEVEL (英国高中课程)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="program" value="TOEFL"> TOEFL (托福英语考试)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="IELTS"> IELTS (雅思英语考试)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="FCE"> FCE (剑桥英语高级考试)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="PET"> PET (剑桥英语初级考试)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="KET"> KET (剑桥英语入门考试)
+                </label>
+            </div>
+        </div>
+
+        <div class="question-section hidden" id="question1-sub-section">
+            <h2 class="question-title">1a. 请选择具体课程或考试科目。</h2>
+            <div id="sub-program-options">
+                <!-- Sub-options will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <div class="question-section" id="question3-section">
+            <h2 class="question-title">2. 学员最核心的需求是什么？</h2>
+            <div class="options-group" id="needs-options">
+                <label class="radio-option">
+                    <input type="radio" name="core_need" value="提升现有课程成绩"> 提升现有课程成绩
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="core_need" value="系统跟进国际课程学习"> 系统跟进国际课程学习 (从零开始或长期辅导)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="core_need" value="提升标准化考试分数"> 提升标准化考试分数 (如托福/雅思/SAT等)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="core_need" value="寻找特定教学模式"> 寻找特定教学模式 (如线上/线下)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="core_need" value="对老师有国籍偏好"> 对老师有国籍偏好
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="core_need" value="对老师有年龄偏好"> 对老师有年龄偏好
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="core_need" value="对老师的课堂气氛有特定要求"> 对老师的课堂气氛有特定要求
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="core_need" value="对老师性别有偏好"> 对老师性别有偏好
+                </label>
+            </div>
+        </div>
+
+        <div class="question-section" id="question4-section">
+            <h2 class="question-title">3. 学员当前年级是？</h2>
+            <div class="options-group" id="grade-level-options">
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="1年级"> 1年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="2年级"> 2年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="3年级"> 3年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="4年级"> 4年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="5年级"> 5年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="6年级"> 6年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="7年级"> 7年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="8年级"> 8年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="9年级"> 9年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="10年级"> 10年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="11年级"> 11年级
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="grade_level" value="12年级"> 12年级
+                </label>
+            </div>
+        </div>
+
+        <div class="question-section" id="question5-section">
+            <h2 class="question-title">4. 学员希望何时开始课程？</h2>
+            <div class="options-group" id="start-time-options">
+                <label class="radio-option">
+                    <input type="radio" name="start_time" value="越快越好 (一周内)"> 越快越好 (一周内)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="start_time" value="近期 (1个月内)"> 近期 (1个月内)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="start_time" value="未来2-3个月内"> 未来2-3个月内
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="start_time" value="未来3个月以上"> 未来3个月以上
+                </label>
+            </div>
+        </div>
+
+        <div class="question-section" id="question6-section">
+            <h2 class="question-title">5. 学员目前已获得哪种英语水平证书？</h2>
+            <div class="options-group" id="english-certificate-options">
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="IELTS"> IELTS (雅思英语考试)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="TOEFL"> TOEFL (托福英语考试)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="PTE Academic"> PTE Academic
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="剑桥通用英语 FCE (B2 First)"> 剑桥通用英语 FCE (B2 First)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="剑桥通用英语 PET (B1 Preliminary)"> 剑桥通用英语 PET (B1 Preliminary)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="剑桥通用英语 KET (A2 Key)"> 剑桥通用英语 KET (A2 Key)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="TOEFL Junior"> TOEFL Junior
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="其他英语证书"> 其他英语证书
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="english_certificate" value="无"> 无
+                </label>
+            </div>
+        </div>
+
+        <div class="question-section hidden" id="question5-sub-section">
+            <h2 class="question-title" id="question5-sub-title">5a. 请选择您的分数/等级：</h2>
+            <div id="english-certificate-sub-options">
+                <!-- English certificate sub-options will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <div class="question-section" id="question7-section">
+            <h2 class="question-title">6. 学员期望每周参加的课程辅导频率（课程辅导2小时/次）：</h2>
+            <div class="options-group" id="course-frequency-options">
+                <label class="radio-option">
+                    <input type="radio" name="course_frequency" value="1"> 1次
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="course_frequency" value="2"> 2次
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="course_frequency" value="3"> 3次
+                </label>
+            </div>
+        </div>
+
+        <div class="question-section hidden" id="question6-sub-section">
+            <h2 class="question-title">6a. 请选择期望的上课时间：</h2>
+            <div id="course-days-options">
+                <!-- Course days options will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <div class="question-section hidden" id="question8-section">
+            <h2 class="question-title">7. 学员期望每周参加的作业辅导频率（作业辅导30分钟/次）：</h2>
+            <div class="options-group" id="homework-frequency-options">
+                <!-- Homework frequency options will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <button class="submit-button" id="submit-form">提交表单</button>
+
+        <div class="message-box hidden" id="submission-message">
+            <div id="error-message-display" class="text-red-700 font-bold mb-4 hidden"></div>
+            <h3 class="text-xl font-bold text-gray-800 mb-4" id="summary-header">您的报名信息概览</h3>
+            <div id="summary-details" class="summary-details-container mb-6">
+                <!-- Summary details will be populated here -->
+            </div>
+            <div id="timetable-display" class="hidden"></div>
+            <p class="mt-6 text-sm text-gray-600" id="final-contact-message">感谢您的选择！我们的专业顾问将尽快与您联系，提供定制化的课程建议。</p>
+        </div>
+    </div>
+
+    <script>
+        const programOptions = document.getElementById('program-options');
+        const question1SubSection = document.getElementById('question1-sub-section');
+        const subProgramOptionsDiv = document.getElementById('sub-program-options');
+        const submitButton = document.getElementById('submit-form');
+        const submissionMessage = document.getElementById('submission-message');
+        const summaryDetails = document.getElementById('summary-details');
+        const timetableDisplay = document.getElementById('timetable-display');
+
+        const errorMessageDisplay = document.getElementById('error-message-display');
+        const summaryHeader = document.getElementById('summary-header');
+        const finalContactMessage = document.getElementById('final-contact-message');
+
+        const question5SubSection = document.getElementById('question5-sub-section');
+        const englishCertificateSubOptionsDiv = document.getElementById('english-certificate-sub-options');
+
+        const question6MainSection = document.getElementById('question7-section');
+        const question6SubSection = document.getElementById('question6-sub-section');
+        const courseDaysOptionsDiv = document.getElementById('course-days-options');
+        const question7MainSection = document.getElementById('question8-section');
+        const homeworkFrequencyOptionsDiv = document.getElementById('homework-frequency-options');
+
+
+        const systemPrograms = ['IBDP', 'MYP', 'PYP', 'AP', 'GCSE/IGCSE', 'A-LEVEL'];
+        // Updated order for englishCertificatesWithSubLevels based on new "含金量" order
+        const englishCertificatesWithSubLevels = [
+            'IELTS', 'TOEFL', 'PTE Academic',
+            '剑桥通用英语 FCE (B2 First)', '剑桥通用英语 PET (B1 Preliminary)', '剑桥通用英语 KET (A2 Key)',
+            'TOEFL Junior'
+        ];
+        const weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+
+        let selectedCourseDays = []; // To store the selected course days for timetable generation
+
+        const subOptions = {
+            'IBDP': [
+                'IBDP 语言与文学 (Language and Literature)', 'IBDP 语言习得 (Language Acquisition)',
+                'IBDP 个体与社会 (Individuals and Societies)', 'IBDP 科学 (Sciences)',
+                'IBDP 数学 (Mathematics)', 'IBDP 艺术 (The Arts)',
+                'IBDP 知识论 (TOK) / 拓展论文 (EE) / 创造、行动与服务 (CAS)'
+            ],
+            'MYP': [
+                'MYP 语言与文学 (Language and Literature)', 'MYP 语言习得 (Language Acquisition)',
+                'MYP 个体与社会 (Individuals and Societies)', 'MYP 科学 (Sciences)',
+                'MYP 数学 (Mathematics)', 'MYP 艺术 (Arts)',
+                'MYP 体育与健康教育 (Physical and Health Education)', 'MYP 设计 (Design)',
+                'MYP 个人项目 (Personal Project)'
+            ],
+            'PYP': [
+                'PYP 语言 (Language)', 'PYP 数学 (Mathematics)', 'PYP 科学 (Science)',
+                'PYP 社会研究 (Social Studies)', 'PYP 艺术 (Arts)',
+                'PYP 体育、社会与个人教育 (PSPE)', 'PYP 探究单元 (Units of Inquiry)'
+            ],
+            'AP': [
+                'AP 微积分 AB/BC', 'AP 统计学', 'AP 物理 1/2/C', 'AP 化学', 'AP 生物',
+                'AP 经济学 (微观/宏观)', 'AP 历史 (美国/世界/欧洲)', 'AP 心理学',
+                'AP 计算机科学 A/原理', 'AP 英语语言与写作', 'AP 英语文学与写作',
+                '其他AP科目 (请联系顾问)'
+            ],
+            'GCSE/IGCSE': [
+                'IGCSE 数学', 'IGCSE 英语 (第一语言/第二语言)', 'IGCSE 物理',
+                'IGCSE 化学', 'IGCSE 生物', 'IGCSE 历史', 'IGCSE 地理',
+                'IGCSE 商务学习', 'IGCSE 经济学', '其他IGCSE科目 (请联系顾问)'
+            ],
+            'A-LEVEL': [
+                'A-Level 数学 (或进阶数学)', 'A-Level 物理', 'A-Level 化学',
+                'A-Level 生物', 'A-Level 经济学', 'A-Level 商务',
+                'A-Level 计算机科学', 'A-Level 历史', 'A-Level 英语文学',
+                '其他A-Level科目 (请联系顾问)'
+            ]
+        };
+
+        const englishSubScores = {
+            'TOEFL': [ // Updated TOEFL ranges
+                '113-120分', // C2
+                '102-112分', // C1
+                '79-101分',  // B2
+                '46-78分',   // B1
+                '32-45分',   // A2
+                '<32分'      // A1或以下
+            ],
+            'IELTS': [ // Updated IELTS ranges
+                '8.5-9.0分', // C2
+                '7.5-8.0分', // C1
+                '6.5-7.0分', // B2
+                '5.5-6.0分', // B1
+                '4.5-5.0分', // A2
+                '<4.5分'     // A1或以下
+            ],
+            'TOEFL Junior': [
+                '600-620分 (Emerging)', '625-725分 (Progressing)',
+                '730-780分 (Expanding)', '785-860分 (Accomplished)',
+                '865-900分 (Superior)'
+            ],
+            'PTE Academic': [ // Updated PTE ranges
+                '85-90分',   // C2
+                '76-84分',   // C1
+                '59-75分',   // B2
+                '43-58分',   // B1
+                '30-42分',   // A2
+                '10-29分'    // A1或以下
+            ],
+            '剑桥通用英语 KET (A2 Key)': ['A级', 'B级', 'C级'],
+            '剑桥通用英语 PET (B1 Preliminary)': ['A级', 'B级', 'C级'],
+            '剑桥通用英语 FCE (B2 First)': ['A级', 'B级', 'C级']
+        };
+
+        const courseDayOptionsMap = {
+            '1': [
+                '周一', '周二', '周三', '周四', '周五', '周六', '周日'
+            ],
+            '2': [
+                '周一/周三', '周二/周四', '周二/周五', '周三/周六', '周四/周日'
+            ],
+            '3': [
+                '周一/周三/周五', '周二/周四/周六'
+            ]
+        };
+
+        // Function to update selected class for radio options
+        function updateSelectedClass(groupName) {
+            const radios = document.querySelectorAll(`input[name="${groupName}"]`);
+            radios.forEach(radio => {
+                const label = radio.closest('label');
+                if (radio.checked) {
+                    label.classList.add('selected');
+                } else {
+                    label.classList.remove('selected');
+                }
+            });
+        }
+
+        // Helper to generate radio options
+        function generateRadioOptions(container, name, options, selectedValue = null) {
+            container.innerHTML = '';
+            options.forEach(optionText => {
+                const label = document.createElement('label');
+                label.className = 'radio-option';
+                const input = document.createElement('input');
+                input.type = 'radio';
+                input.name = name;
+                input.value = optionText;
+                if (selectedValue === optionText) {
+                    input.checked = true;
+                }
+                label.appendChild(input);
+                label.appendChild(document.createTextNode(` ${optionText}`));
+                container.appendChild(label);
+            });
+            container.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                radio.addEventListener('change', () => updateSelectedClass(name));
+            });
+            // Initial selection styling
+            updateSelectedClass(name);
+        }
+
+        // Event listener for Question 1 (main program selection)
+        programOptions.addEventListener('change', (event) => {
+            const selectedProgram = event.target.value;
+            updateSelectedClass('program');
+
+            if (systemPrograms.includes(selectedProgram)) {
+                question1SubSection.classList.remove('hidden'); // Show 1a
+                generateRadioOptions(subProgramOptionsDiv, 'sub_program', subOptions[selectedProgram]);
+            } else {
+                question1SubSection.classList.add('hidden'); // Hide 1a
+                subProgramOptionsDiv.innerHTML = '';
+            }
+        });
+
+        // Event listener for Question 6 (Course Frequency)
+        document.getElementById('course-frequency-options').addEventListener('change', (event) => {
+            const selectedFrequency = event.target.value;
+            updateSelectedClass('course_frequency');
+
+            // Show 6a and populate options
+            question6SubSection.classList.remove('hidden');
+            generateRadioOptions(courseDaysOptionsDiv, 'course_days', courseDayOptionsMap[selectedFrequency]);
+
+            // Show Q7 (homework frequency) and populate options
+            question7MainSection.classList.remove('hidden'); // Show Q7
+            const homeworkFreqValue = 7 - parseInt(selectedFrequency); // Total days - course days
+            homeworkFrequencyOptionsDiv.innerHTML = `
+                <label class="radio-option">
+                    <input type="radio" name="homework_frequency" value="${homeworkFreqValue}" checked> ${homeworkFreqValue}次
+                </label>
+            `;
+            updateSelectedClass('homework_frequency'); // Apply selected style immediately
+        });
+
+        // Event listeners for other questions (renumbered)
+        document.getElementById('needs-options').addEventListener('change', () => updateSelectedClass('core_need'));
+        document.getElementById('grade-level-options').addEventListener('change', () => updateSelectedClass('grade_level'));
+        document.getElementById('start-time-options').addEventListener('change', () => updateSelectedClass('start_time'));
+        document.getElementById('homework-frequency-options').addEventListener('change', () => updateSelectedClass('homework_frequency'));
+
+
+        // Event listener for Question 5 (English Certificate)
+        document.getElementById('english-certificate-options').addEventListener('change', (event) => {
+            const selectedCertificate = event.target.value;
+            updateSelectedClass('english_certificate');
+
+            if (englishCertificatesWithSubLevels.includes(selectedCertificate)) {
+                question5SubSection.classList.remove('hidden'); // Show 5a
+                generateRadioOptions(englishCertificateSubOptionsDiv, 'english_sub_score', englishSubScores[selectedCertificate]);
+            } else {
+                question5SubSection.classList.add('hidden'); // Hide 5a
+                englishCertificateSubOptionsDiv.innerHTML = '';
+            }
+        });
+
+        // Handle form submission
+        submitButton.addEventListener('click', () => {
+            const selectedProgram = document.querySelector('input[name="program"]:checked')?.value;
+            let selectedSubProgram = null;
+            if (systemPrograms.includes(selectedProgram)) {
+                selectedSubProgram = document.querySelector('input[name="sub_program"]:checked')?.value;
+            }
+            const selectedCoreNeed = document.querySelector('input[name="core_need"]:checked')?.value;
+            const selectedGradeLevel = document.querySelector('input[name="grade_level"]:checked')?.value;
+            const selectedStartTime = document.querySelector('input[name="start_time"]:checked')?.value;
+            const selectedEnglishCertificate = document.querySelector('input[name="english_certificate"]:checked')?.value;
+            let selectedEnglishSubScore = null;
+            if (englishCertificatesWithSubLevels.includes(selectedEnglishCertificate)) {
+                selectedEnglishSubScore = document.querySelector('input[name="english_sub_score"]:checked')?.value;
+            }
+            const selectedCourseFrequency = document.querySelector('input[name="course_frequency"]:checked')?.value;
+            const selectedCourseDaysRaw = document.querySelector('input[name="course_days"]:checked')?.value;
+            const selectedHomeworkFrequency = document.querySelector('input[name="homework_frequency"]:checked')?.value;
+
+            let allRequiredFieldsSelected = true;
+            let currentErrorMessage = '';
+
+            // Basic validation for all main questions
+            if (!selectedProgram) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择学员需要提升的项目。'; }
+            else if (systemPrograms.includes(selectedProgram) && !selectedSubProgram) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择具体课程或考试科目。'; }
+            else if (!selectedCoreNeed) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择学员最核心的需求。'; }
+            else if (!selectedGradeLevel) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择学员当前年级。'; }
+            else if (!selectedStartTime) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择期望的开课时间。'; }
+            else if (!selectedEnglishCertificate) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择学员已获得的英语水平证书。'; }
+            else if (englishCertificatesWithSubLevels.includes(selectedEnglishCertificate) && !selectedEnglishSubScore) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择您的英语证书分数/等级。'; }
+            else if (!selectedCourseFrequency) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择课程辅导频率。'; }
+            else if (!selectedCourseDaysRaw) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择期望的上课时间。'; }
+            else if (!selectedHomeworkFrequency) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择作业辅导频率。'; }
+
+
+            // Reset message box state and hide all content initially
+            submissionMessage.classList.remove('hidden');
+            submissionMessage.style.backgroundColor = ''; // Clear previous styles
+            submissionMessage.style.color = '';
+            submissionMessage.style.borderColor = '';
+
+            errorMessageDisplay.classList.add('hidden'); // Hide error message div
+            summaryHeader.classList.add('hidden'); // Hide summary header
+            summaryDetails.innerHTML = ''; // Clear summary details content
+            summaryDetails.classList.add('hidden'); // Hide summary details container
+            timetableDisplay.innerHTML = ''; // Clear timetable content
+            timetableDisplay.classList.add('hidden'); // Hide timetable container
+            finalContactMessage.classList.add('hidden'); // Hide final contact message
+
+
+            if (!allRequiredFieldsSelected) {
+                // Show error message and apply error styles
+                errorMessageDisplay.classList.remove('hidden');
+                errorMessageDisplay.textContent = currentErrorMessage;
+                submissionMessage.style.backgroundColor = '#fee2e2';
+                submissionMessage.style.color = '#991b1b';
+                submissionMessage.style.borderColor = '#fca5a5';
+                return; // Exit
+            }
+
+            // If validation passes:
+            // Apply success styles
+            submissionMessage.style.backgroundColor = '#ecfdf5';
+            submissionMessage.style.color = '#065f46';
+            submissionMessage.style.borderColor = '#a7f3d0';
+
+            // Show and populate summary details
+            summaryHeader.classList.remove('hidden');
+            summaryDetails.classList.remove('hidden');
+            let summaryHtml = `
+                <div class="summary-item">
+                    <span class="summary-label">目标项目：</span>
+                    <span class="summary-value">${selectedProgram}</span>
+                </div>
+            `;
+            if (selectedSubProgram) {
+                summaryHtml += `
+                    <div class="summary-item">
+                        <span class="summary-label">具体科目/课程：</span>
+                        <span class="summary-value">${selectedSubProgram}</span>
+                    </div>
+                `;
+            }
+            summaryHtml += `
+                <div class="summary-item">
+                    <span class="summary-label">核心需求：</span>
+                    <span class="summary-value">${selectedCoreNeed}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">学员当前年级：</span>
+                    <span class="summary-value">${selectedGradeLevel}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">期望开课：</span>
+                    <span class="summary-value">${selectedStartTime}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">英语证书：</span>
+                    <span class="summary-value">${selectedEnglishCertificate}`;
+            if (selectedEnglishSubScore) {
+                summaryHtml += ` (${selectedEnglishSubScore})`;
+            }
+            summaryHtml += `</span></div>
+                <div class="summary-item">
+                    <span class="summary-label">课程辅导频率：</span>
+                    <span class="summary-value">每周${selectedCourseFrequency}次</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">作业辅导频率：</span>
+                    <span class="summary-value">每周${selectedHomeworkFrequency}次</span>
+                </div>
+            `;
+            summaryDetails.innerHTML = summaryHtml;
+
+
+            // Generate Timetable
+            const timetable = {};
+            weekdays.forEach(day => timetable[day] = '休息');
+
+            const courseDaysArray = selectedCourseDaysRaw.split('/').map(d => d.trim());
+            courseDaysArray.forEach(day => {
+                timetable[day] = '课程辅导 (2小时)';
+            });
+
+            const remainingDays = weekdays.filter(day => !courseDaysArray.includes(day));
+            const homeworkCount = parseInt(selectedHomeworkFrequency);
+            for (let i = 0; i < homeworkCount; i++) {
+                if (remainingDays[i]) {
+                    timetable[remainingDays[i]] = '作业辅导 (30分钟)';
+                }
+            }
+
+            let timetableHtml = `<h3 class="text-lg font-semibold text-gray-700 mb-4 mt-8">学员每周学习安排概览：</h3>
+                                 <div class="timetable-grid">`;
+            weekdays.forEach(day => {
+                timetableHtml += `<div class="timetable-header">${day}</div>`;
+            });
+            weekdays.forEach(day => {
+                let cellClass = 'timetable-cell';
+                if (timetable[day].includes('课程辅导')) {
+                    cellClass += ' course-cell';
+                } else if (timetable[day].includes('作业辅导')) {
+                    cellClass += ' homework-cell';
+                }
+                timetableHtml += `<div class="${cellClass}">${timetable[day]}</div>`;
+            });
+            timetableHtml += `</div>`;
+            timetableDisplay.innerHTML = timetableHtml;
+            timetableDisplay.classList.remove('hidden'); // Ensure timetable is visible
+
+            finalContactMessage.classList.remove('hidden'); // Show final message
+        });
+
+        // Initialize selected class for any pre-selected options (if applicable, though none by default)
+        updateSelectedClass('program');
+        updateSelectedClass('core_need');
+        updateSelectedClass('grade_level');
+        updateSelectedClass('start_time');
+        updateSelectedClass('english_certificate');
+        updateSelectedClass('course_frequency');
+        // No initial update for homework_frequency as it's hidden
+
+        // Hide all conditional sections initially
+        question1SubSection.classList.add('hidden');
+        question5SubSection.classList.add('hidden');
+        question6SubSection.classList.add('hidden');
+        question7MainSection.classList.add('hidden'); // Hide Q7 (homework frequency) initially
+
+        // Hide all submission message content initially
+        errorMessageDisplay.classList.add('hidden');
+        summaryHeader.classList.add('hidden');
+        summaryDetails.classList.add('hidden');
+        timetableDisplay.classList.add('hidden');
+        finalContactMessage.classList.add('hidden');
+
+    </script>
+</body>
+</html>
