@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>国际课程培训报名表</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Noto Sans SC', sans-serif;
             background-color: #f3f4f6;
             display: flex;
             justify-content: center;
@@ -162,13 +163,26 @@
             flex: 1; /* Take equal space */
             margin-left: 8px; /* Small gap between label and value */
         }
-        /* Removed .total-time-summary styles as the element is removed */
+        /* Slogan specific styles */
+        .slogan-style {
+            font-family: 'Zhi Mang Xing', cursive;
+            font-size: 1.875rem; /* Equivalent to text-3xl for visual alignment with title */
+            font-weight: 600; /* Maintain boldness */
+            margin-top: 1.5rem; /* Adjusted spacing */
+            margin-bottom: 1.5rem; /* Adjusted spacing */
+            background-image: linear-gradient(to right, #FF0000, #0000FF, #00FFFF); /* Red to Blue to Cyan gradient */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-align: center; /* Ensure it remains centered */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">国际课程培训报名表</h1>
-        <p class="text-center text-indigo-600 text-lg font-semibold mb-8">周周有人教，天天有人帮</p>
+        <!-- Applied custom slogan style -->
+        <p class="slogan-style">周周有人教，天天有人帮</p>
 
         <div class="question-section" id="question1-main-section">
             <h2 class="question-title">1. 学员需要提升哪个项目？</h2>
@@ -180,16 +194,16 @@
                     <input type="radio" name="program" value="MYP"> MYP (国际文凭中学项目)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="PYP"> PYP (国际文凭小学项目)
+                    <input type="radio" name="program" value="PYP"> PYP (国际文凭小学项目)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="AP"> AP (美国大学预修课程)
+                    <input type="radio" name="program" value="AP"> AP (美国大学预修课程)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="SAT"> SAT (美国大学入学考试)
+                    <input type="radio" name="program" value="SAT"> SAT (美国大学入学考试)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="SSAT"> SSAT (美加私立中学入学考试)
+                    <input type="radio" name="program" value="SSAT"> SSAT (美加私立中学入学考试)
                 </label>
                 <label class="radio-option">
                     <input type="radio" name="GCSE/IGCSE"> GCSE/IGCSE (英国普通中等教育证书)
@@ -493,19 +507,25 @@
 
         // Function to update selected class for radio options
         function updateSelectedClass(groupName) {
+            console.log(`Updating selected class for group: ${groupName}`); // Debugging log
             const radios = document.querySelectorAll(`input[name="${groupName}"]`);
+            radios.forEach(radio => {
+                const label = radio.closest('label');
+                // Always remove 'selected' class first to ensure only the checked one has it
+                label.classList.remove('selected');
+            });
+            // Then, add 'selected' class only to the currently checked radio
             radios.forEach(radio => {
                 const label = radio.closest('label');
                 if (radio.checked) {
                     label.classList.add('selected');
-                } else {
-                    label.classList.remove('selected');
                 }
             });
         }
 
         // Helper to generate radio options
         function generateRadioOptions(container, name, options, selectedValue = null) {
+            console.log(`Generating options for group: ${name}, with options:`, options); // Debugging log
             container.innerHTML = '';
             options.forEach(optionText => {
                 const label = document.createElement('label');
@@ -524,21 +544,30 @@
             container.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
                 radio.addEventListener('change', () => updateSelectedClass(name));
             });
-            // Initial selection styling
+            // Initial selection styling for newly generated radios
             updateSelectedClass(name);
         }
 
         // Event listener for Question 1 (main program selection)
         programOptions.addEventListener('change', (event) => {
             const selectedProgram = event.target.value;
-            updateSelectedClass('program');
+            console.log('Program selected:', selectedProgram); // Debugging log
+            updateSelectedClass('program'); // Update class for main program options
 
             if (systemPrograms.includes(selectedProgram)) {
+                console.log('Selected program is a system program. Showing sub-section.'); // Debugging log
                 question1SubSection.classList.remove('hidden'); // Show 1a
-                generateRadioOptions(subProgramOptionsDiv, 'sub_program', subOptions[selectedProgram]);
+                // Ensure subOptions[selectedProgram] is not undefined or null
+                if (subOptions[selectedProgram]) {
+                    generateRadioOptions(subProgramOptionsDiv, 'sub_program', subOptions[selectedProgram]);
+                } else {
+                    console.error(`Error: subOptions for ${selectedProgram} is undefined.`);
+                    subProgramOptionsDiv.innerHTML = '<p class="text-red-500">无法加载具体科目选项。</p>';
+                }
             } else {
+                console.log('Selected program is NOT a system program. Hiding sub-section.'); // Debugging log
                 question1SubSection.classList.add('hidden'); // Hide 1a
-                subProgramOptionsDiv.innerHTML = '';
+                subProgramOptionsDiv.innerHTML = ''; // Clear sub-options
             }
         });
 
@@ -572,12 +601,21 @@
         // Event listener for Question 5 (English Certificate)
         document.getElementById('english-certificate-options').addEventListener('change', (event) => {
             const selectedCertificate = event.target.value;
+            console.log('English certificate selected:', selectedCertificate); // Debugging log
             updateSelectedClass('english_certificate');
 
             if (englishCertificatesWithSubLevels.includes(selectedCertificate)) {
+                console.log('Selected certificate has sub-levels. Showing sub-section.'); // Debugging log
                 question5SubSection.classList.remove('hidden'); // Show 5a
-                generateRadioOptions(englishCertificateSubOptionsDiv, 'english_sub_score', englishSubScores[selectedCertificate]);
+                // Ensure englishSubScores[selectedCertificate] is not undefined or null
+                if (englishSubScores[selectedCertificate]) {
+                    generateRadioOptions(englishCertificateSubOptionsDiv, 'english_sub_score', englishSubScores[selectedCertificate]);
+                } else {
+                    console.error(`Error: englishSubScores for ${selectedCertificate} is undefined.`);
+                    englishCertificateSubOptionsDiv.innerHTML = '<p class="text-red-500">无法加载分数/等级选项。</p>';
+                }
             } else {
+                console.log('Selected certificate does NOT have sub-levels. Hiding sub-section.'); // Debugging log
                 question5SubSection.classList.add('hidden'); // Hide 5a
                 englishCertificateSubOptionsDiv.innerHTML = '';
             }
