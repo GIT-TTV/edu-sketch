@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>国际课程报名表</title>
+    <title>国际课程培训报名表</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -167,7 +167,8 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">国际课程报名表</h1>
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">国际课程培训报名表</h1>
+        <p class="text-center text-indigo-600 text-lg font-semibold mb-8">周周有人教，天天有人帮</p>
 
         <div class="question-section" id="question1-main-section">
             <h2 class="question-title">1. 学员需要提升哪个项目？</h2>
@@ -182,22 +183,22 @@
                     <input type="radio" name="PYP"> PYP (国际文凭小学项目)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="program" value="AP"> AP (美国大学预修课程)
+                    <input type="radio" name="AP"> AP (美国大学预修课程)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="program" value="SAT"> SAT (美国大学入学考试)
+                    <input type="radio" name="SAT"> SAT (美国大学入学考试)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="program" value="SSAT"> SSAT (美加私立中学入学考试)
+                    <input type="radio" name="SSAT"> SSAT (美加私立中学入学考试)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="program" value="GCSE/IGCSE"> GCSE/IGCSE (英国普通中等教育证书)
+                    <input type="radio" name="GCSE/IGCSE"> GCSE/IGCSE (英国普通中等教育证书)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="program" value="A-LEVEL"> A-LEVEL (英国高中课程)
+                    <input type="radio" name="A-LEVEL"> A-LEVEL (英国高中课程)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="program" value="TOEFL"> TOEFL (托福英语考试)
+                    <input type="radio" name="TOEFL"> TOEFL (托福英语考试)
                 </label>
                 <label class="radio-option">
                     <input type="radio" name="IELTS"> IELTS (雅思英语考试)
@@ -234,19 +235,13 @@
                     <input type="radio" name="core_need" value="提升标准化考试分数"> 提升标准化考试分数 (如托福/雅思/SAT等)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="core_need" value="寻找特定教学模式"> 寻找特定教学模式 (如线上/线下)
+                    <input type="radio" name="core_need" value="弥补知识漏洞/难点攻克"> 弥补知识漏洞/难点攻克
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="core_need" value="对老师有国籍偏好"> 对老师有国籍偏好
+                    <input type="radio" name="core_need" value="提前预习/拓展学习"> 提前预习/拓展学习
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="core_need" value="对老师有年龄偏好"> 对老师有年龄偏好
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="core_need" value="对老师的课堂气氛有特定要求"> 对老师的课堂气氛有特定要求
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="core_need" value="对老师性别有偏好"> 对老师性别有偏好
+                    <input type="radio" name="core_need" value="培养学习兴趣/习惯"> 培养学习兴趣/习惯
                 </label>
             </div>
         </div>
@@ -347,7 +342,7 @@
         <div class="question-section hidden" id="question5-sub-section">
             <h2 class="question-title" id="question5-sub-title">5a. 请选择您的分数/等级：</h2>
             <div id="english-certificate-sub-options">
-                <!-- English certificate sub-options will be dynamically loaded here -->
+                <!-- Sub-options will be dynamically loaded here -->
             </div>
         </div>
 
@@ -369,14 +364,14 @@
         <div class="question-section hidden" id="question6-sub-section">
             <h2 class="question-title">6a. 请选择期望的上课时间：</h2>
             <div id="course-days-options">
-                <!-- Course days options will be dynamically loaded here -->
+                <!-- Sub-options will be dynamically loaded here -->
             </div>
         </div>
 
         <div class="question-section hidden" id="question8-section">
             <h2 class="question-title">7. 学员期望每周参加的作业辅导频率（作业辅导30分钟/次）：</h2>
             <div class="options-group" id="homework-frequency-options">
-                <!-- Homework frequency options will be dynamically loaded here -->
+                <!-- Sub-options will be dynamically loaded here -->
             </div>
         </div>
 
@@ -417,7 +412,6 @@
 
 
         const systemPrograms = ['IBDP', 'MYP', 'PYP', 'AP', 'GCSE/IGCSE', 'A-LEVEL'];
-        // Updated order for englishCertificatesWithSubLevels based on new "含金量" order
         const englishCertificatesWithSubLevels = [
             'IELTS', 'TOEFL', 'PTE Academic',
             '剑桥通用英语 FCE (B2 First)', '剑桥通用英语 PET (B1 Preliminary)', '剑桥通用英语 KET (A2 Key)',
@@ -466,34 +460,19 @@
         };
 
         const englishSubScores = {
-            'TOEFL': [ // Updated TOEFL ranges
-                '113-120分', // C2
-                '102-112分', // C1
-                '79-101分',  // B2
-                '46-78分',   // B1
-                '32-45分',   // A2
-                '<32分'      // A1或以下
+            'TOEFL': [
+                '113-120分', '102-112分', '79-101分', '46-78分', '32-45分', '<32分'
             ],
-            'IELTS': [ // Updated IELTS ranges
-                '8.5-9.0分', // C2
-                '7.5-8.0分', // C1
-                '6.5-7.0分', // B2
-                '5.5-6.0分', // B1
-                '4.5-5.0分', // A2
-                '<4.5分'     // A1或以下
+            'IELTS': [
+                '8.5-9.0分', '7.5-8.0分', '6.5-7.0分', '5.5-6.0分', '4.5-5.0分', '<4.5分'
             ],
             'TOEFL Junior': [
                 '600-620分 (Emerging)', '625-725分 (Progressing)',
                 '730-780分 (Expanding)', '785-860分 (Accomplished)',
                 '865-900分 (Superior)'
             ],
-            'PTE Academic': [ // Updated PTE ranges
-                '85-90分',   // C2
-                '76-84分',   // C1
-                '59-75分',   // B2
-                '43-58分',   // B1
-                '30-42分',   // A2
-                '10-29分'    // A1或以下
+            'PTE Academic': [
+                '85-90分', '76-84分', '59-75分', '43-58分', '30-42分', '10-29分'
             ],
             '剑桥通用英语 KET (A2 Key)': ['A级', 'B级', 'C级'],
             '剑桥通用英语 PET (B1 Preliminary)': ['A级', 'B级', 'C级'],
