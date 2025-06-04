@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet"> <!-- Ma Shan Zheng font link -->
     <style>
         body {
             font-family: 'Noto Sans SC', sans-serif;
@@ -165,12 +166,12 @@
         }
         /* Slogan specific styles */
         .slogan-style {
-            font-family: 'Zhi Mang Xing', cursive;
+            font-family: 'Ma Shan Zheng', cursive; /* Changed to Ma Shan Zheng font */
             font-size: 1.875rem; /* Equivalent to text-3xl for visual alignment with title */
             font-weight: 600; /* Maintain boldness */
             margin-top: 1.5rem; /* Adjusted spacing */
             margin-bottom: 1.5rem; /* Adjusted spacing */
-            background-image: linear-gradient(to right, #FF0000, #0000FF, #00FFFF); /* Red to Blue to Cyan gradient */
+            background-image: linear-gradient(to bottom right, #FF0000, #0000FF); /* Changed to Red to Blue gradient, top-left to bottom-right */
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -180,13 +181,15 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-2">国际课程培训报名表</h1>
+        <!-- Updated h1 classes for larger size and wider tracking -->
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-2 tracking-wider">国际课程培训报名表</h1>
         <!-- Applied custom slogan style -->
         <p class="slogan-style">周周有人教，天天有人帮</p>
 
         <div class="question-section" id="question1-main-section">
             <h2 class="question-title">1. 学员需要提升哪个项目？</h2>
             <div class="options-group" id="program-options">
+                <!-- System Programs (with sub-options) -->
                 <label class="radio-option">
                     <input type="radio" name="program" value="IBDP"> IBDP (国际文凭大学预科项目)
                 </label>
@@ -200,31 +203,32 @@
                     <input type="radio" name="program" value="AP"> AP (美国大学预修课程)
                 </label>
                 <label class="radio-option">
+                    <input type="radio" name="program" value="GCSE/IGCSE"> GCSE/IGCSE (英国普通中等教育证书)
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="program" value="A-LEVEL"> A-LEVEL (英国高中课程)
+                </label>
+                <!-- Single-item Exams -->
+                <label class="radio-option">
                     <input type="radio" name="program" value="SAT"> SAT (美国大学入学考试)
                 </label>
                 <label class="radio-option">
                     <input type="radio" name="program" value="SSAT"> SSAT (美加私立中学入学考试)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="GCSE/IGCSE"> GCSE/IGCSE (英国普通中等教育证书)
+                    <input type="radio" name="program" value="TOEFL"> TOEFL (托福英语考试)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="A-LEVEL"> A-LEVEL (英国高中课程)
+                    <input type="radio" name="program" value="IELTS"> IELTS (雅思英语考试)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="TOEFL"> TOEFL (托福英语考试)
+                    <input type="radio" name="program" value="FCE"> FCE (剑桥英语高级考试)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="IELTS"> IELTS (雅思英语考试)
+                    <input type="radio" name="program" value="PET"> PET (剑桥英语初级考试)
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="FCE"> FCE (剑桥英语高级考试)
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="PET"> PET (剑桥英语初级考试)
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="KET"> KET (剑桥英语入门考试)
+                    <input type="radio" name="program" value="KET"> KET (剑桥英语入门考试)
                 </label>
             </div>
         </div>
@@ -291,7 +295,7 @@
                     <input type="radio" name="grade_level" value="9年级"> 9年级
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="grade_level" value="10年级"> 10年级
+                    <input type="radio" name="grade_level" value="10年级"> 10年级 <!-- FIXED: name="grade_level" -->
                 </label>
                 <label class="radio-option">
                     <input type="radio" name="grade_level" value="11年级"> 11年级
@@ -403,7 +407,9 @@
     </div>
 
     <script>
-        const programOptions = document.getElementById('program-options');
+        console.log("Script loaded and started!"); // Added this line for initial debug check
+
+        const programOptionsContainer = document.getElementById('program-options');
         const question1SubSection = document.getElementById('question1-sub-section');
         const subProgramOptionsDiv = document.getElementById('sub-program-options');
         const submitButton = document.getElementById('submit-form');
@@ -416,6 +422,7 @@
         const finalContactMessage = document.getElementById('final-contact-message');
 
         const question5SubSection = document.getElementById('question5-sub-section');
+        const englishCertificateOptionsContainer = document.getElementById('english-certificate-options');
         const englishCertificateSubOptionsDiv = document.getElementById('english-certificate-sub-options');
 
         const question6MainSection = document.getElementById('question7-section');
@@ -507,25 +514,36 @@
 
         // Function to update selected class for radio options
         function updateSelectedClass(groupName) {
-            console.log(`Updating selected class for group: ${groupName}`); // Debugging log
-            const radios = document.querySelectorAll(`input[name="${groupName}"]`);
-            radios.forEach(radio => {
+            console.log(`[DEBUG] updateSelectedClass: Called for group "${groupName}"`);
+            const radiosInGroup = document.querySelectorAll(`input[name="${groupName}"]`);
+            console.log(`[DEBUG] updateSelectedClass: Found ${radiosInGroup.length} radios in group "${groupName}"`);
+            // Step 1: Remove 'selected' class from ALL radios in the group
+            radiosInGroup.forEach(radio => {
                 const label = radio.closest('label');
-                // Always remove 'selected' class first to ensure only the checked one has it
-                label.classList.remove('selected');
-            });
-            // Then, add 'selected' class only to the currently checked radio
-            radios.forEach(radio => {
-                const label = radio.closest('label');
-                if (radio.checked) {
-                    label.classList.add('selected');
+                if (label && label.classList.contains('selected')) {
+                    label.classList.remove('selected');
+                    // console.log(`[DEBUG] updateSelectedClass: Removed 'selected' from radio with value "${radio.value}"`); // Too verbose for every radio
                 }
             });
+
+            // Step 2: Add 'selected' class to the currently checked radio
+            const checkedRadio = document.querySelector(`input[name="${groupName}"]:checked`);
+            if (checkedRadio) {
+                const label = checkedRadio.closest('label');
+                if (label) {
+                    label.classList.add('selected');
+                    console.log(`[DEBUG] updateSelectedClass: Added 'selected' to radio with value "${checkedRadio.value}"`);
+                } else {
+                    console.warn(`[WARN] updateSelectedClass: Label not found for checked radio with value "${checkedRadio.value}"`);
+                }
+            } else {
+                console.log(`[DEBUG] updateSelectedClass: No radio checked in group "${groupName}"`);
+            }
         }
 
         // Helper to generate radio options
         function generateRadioOptions(container, name, options, selectedValue = null) {
-            console.log(`Generating options for group: ${name}, with options:`, options); // Debugging log
+            console.log(`[DEBUG] generateRadioOptions: Generating options for group: ${name}, with options:`, options);
             container.innerHTML = '';
             options.forEach(optionText => {
                 const label = document.createElement('label');
@@ -541,6 +559,7 @@
                 label.appendChild(document.createTextNode(` ${optionText}`));
                 container.appendChild(label);
             });
+            // Attach event listeners to newly created radios
             container.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
                 radio.addEventListener('change', () => updateSelectedClass(name));
             });
@@ -548,32 +567,42 @@
             updateSelectedClass(name);
         }
 
-        // Event listener for Question 1 (main program selection)
-        programOptions.addEventListener('change', (event) => {
-            const selectedProgram = event.target.value;
-            console.log('Program selected:', selectedProgram); // Debugging log
-            updateSelectedClass('program'); // Update class for main program options
+        // Event listener for Question 1 (main program selection) - Attaching to each radio input
+        // This ensures the change event is correctly captured for each individual radio.
+        document.querySelectorAll('input[name="program"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                const selectedProgram = event.target.value;
+                console.log('[DEBUG] Program selected:', selectedProgram);
+                updateSelectedClass('program'); // Update class for main program options
 
-            if (systemPrograms.includes(selectedProgram)) {
-                console.log('Selected program is a system program. Showing sub-section.'); // Debugging log
-                question1SubSection.classList.remove('hidden'); // Show 1a
-                // Ensure subOptions[selectedProgram] is not undefined or null
-                if (subOptions[selectedProgram]) {
-                    generateRadioOptions(subProgramOptionsDiv, 'sub_program', subOptions[selectedProgram]);
+                if (systemPrograms.includes(selectedProgram)) {
+                    console.log('[DEBUG] Selected program is a system program. Showing sub-section and generating options.');
+                    question1SubSection.classList.remove('hidden'); // Show 1a
+                    if (subOptions[selectedProgram]) {
+                        console.log(`[DEBUG] Found subOptions for ${selectedProgram}:`, subOptions[selectedProgram]);
+                        generateRadioOptions(subProgramOptionsDiv, 'sub_program', subOptions[selectedProgram]);
+                    } else {
+                        console.error(`[ERROR] subOptions for "${selectedProgram}" is undefined or empty. Please check subOptions data.`);
+                        subProgramOptionsDiv.innerHTML = '<p class="text-red-500">无法加载具体科目选项。</p>';
+                    }
                 } else {
-                    console.error(`Error: subOptions for ${selectedProgram} is undefined.`);
-                    subProgramOptionsDiv.innerHTML = '<p class="text-red-500">无法加载具体科目选项。</p>';
+                    console.log('[DEBUG] Selected program is NOT a system program. Hiding sub-section and clearing options.');
+                    question1SubSection.classList.add('hidden'); // Hide 1a
+                    subProgramOptionsDiv.innerHTML = ''; // Clear sub-options
+                    // Also clear selection for sub_program if main program changes to a non-system program
+                    const currentSubProgramRadio = document.querySelector('input[name="sub_program"]:checked');
+                    if (currentSubProgramRadio) {
+                        currentSubProgramRadio.checked = false;
+                        updateSelectedClass('sub_program'); // Update style for the cleared group
+                    }
                 }
-            } else {
-                console.log('Selected program is NOT a system program. Hiding sub-section.'); // Debugging log
-                question1SubSection.classList.add('hidden'); // Hide 1a
-                subProgramOptionsDiv.innerHTML = ''; // Clear sub-options
-            }
+            });
         });
 
         // Event listener for Question 6 (Course Frequency)
         document.getElementById('course-frequency-options').addEventListener('change', (event) => {
             const selectedFrequency = event.target.value;
+            console.log('[DEBUG] Course frequency selected:', selectedFrequency);
             updateSelectedClass('course_frequency');
 
             // Show 6a and populate options
@@ -598,31 +627,40 @@
         document.getElementById('homework-frequency-options').addEventListener('change', () => updateSelectedClass('homework_frequency'));
 
 
-        // Event listener for Question 5 (English Certificate)
-        document.getElementById('english-certificate-options').addEventListener('change', (event) => {
-            const selectedCertificate = event.target.value;
-            console.log('English certificate selected:', selectedCertificate); // Debugging log
-            updateSelectedClass('english_certificate');
+        // Event listener for Question 5 (English Certificate) - Attaching to each radio input
+        document.querySelectorAll('input[name="english_certificate"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                const selectedCertificate = event.target.value;
+                console.log('[DEBUG] English certificate selected:', selectedCertificate);
+                updateSelectedClass('english_certificate');
 
-            if (englishCertificatesWithSubLevels.includes(selectedCertificate)) {
-                console.log('Selected certificate has sub-levels. Showing sub-section.'); // Debugging log
-                question5SubSection.classList.remove('hidden'); // Show 5a
-                // Ensure englishSubScores[selectedCertificate] is not undefined or null
-                if (englishSubScores[selectedCertificate]) {
-                    generateRadioOptions(englishCertificateSubOptionsDiv, 'english_sub_score', englishSubScores[selectedCertificate]);
+                if (englishCertificatesWithSubLevels.includes(selectedCertificate)) {
+                    console.log('[DEBUG] Selected certificate has sub-levels. Showing sub-section and generating options.');
+                    question5SubSection.classList.remove('hidden'); // Show 5a
+                    if (englishSubScores[selectedCertificate]) {
+                        console.log(`[DEBUG] Found englishSubScores for ${selectedCertificate}:`, englishSubScores[selectedCertificate]);
+                        generateRadioOptions(englishCertificateSubOptionsDiv, 'english_sub_score', englishSubScores[selectedCertificate]);
+                    } else {
+                        console.error(`[ERROR] englishSubScores for "${selectedCertificate}" is undefined or empty. Please check englishSubScores data.`);
+                        englishCertificateSubOptionsDiv.innerHTML = '<p class="text-red-500">无法加载分数/等级选项。</p>';
+                    }
                 } else {
-                    console.error(`Error: englishSubScores for ${selectedCertificate} is undefined.`);
-                    englishCertificateSubOptionsDiv.innerHTML = '<p class="text-red-500">无法加载分数/等级选项。</p>';
+                    console.log('[DEBUG] Selected certificate does NOT have sub-levels. Hiding sub-section and clearing options.');
+                    question5SubSection.classList.add('hidden'); // Hide 5a
+                    englishCertificateSubOptionsDiv.innerHTML = '';
+                    // Also clear selection for english_sub_score if main certificate changes to a non-sub-level option
+                    const currentEnglishSubScoreRadio = document.querySelector('input[name="english_sub_score"]:checked');
+                    if (currentEnglishSubScoreRadio) {
+                        currentEnglishSubScoreRadio.checked = false;
+                        updateSelectedClass('english_sub_score'); // Update style for the cleared group
+                    }
                 }
-            } else {
-                console.log('Selected certificate does NOT have sub-levels. Hiding sub-section.'); // Debugging log
-                question5SubSection.classList.add('hidden'); // Hide 5a
-                englishCertificateSubOptionsDiv.innerHTML = '';
-            }
+            });
         });
 
         // Handle form submission
         submitButton.addEventListener('click', () => {
+            console.log('[DEBUG] Submit button clicked.');
             const selectedProgram = document.querySelector('input[name="program"]:checked')?.value;
             let selectedSubProgram = null;
             if (systemPrograms.includes(selectedProgram)) {
@@ -655,6 +693,7 @@
             else if (!selectedCourseDaysRaw) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择期望的上课时间。'; }
             else if (!selectedHomeworkFrequency) { allRequiredFieldsSelected = false; currentErrorMessage = '请选择作业辅导频率。'; }
 
+            console.log('[DEBUG] Validation result:', allRequiredFieldsSelected ? 'Passed' : 'Failed', 'Error:', currentErrorMessage);
 
             // Reset message box state and hide all content initially
             submissionMessage.classList.remove('hidden');
@@ -668,7 +707,7 @@
             summaryDetails.classList.add('hidden'); // Hide summary details container
             timetableDisplay.innerHTML = ''; // Clear timetable content
             timetableDisplay.classList.add('hidden'); // Hide timetable container
-            finalContactMessage.classList.add('hidden'); // Hide final contact message
+            finalContactMessage.classList.add('hidden');
 
 
             if (!allRequiredFieldsSelected) {
@@ -678,6 +717,7 @@
                 submissionMessage.style.backgroundColor = '#fee2e2';
                 submissionMessage.style.color = '#991b1b';
                 submissionMessage.style.borderColor = '#fca5a5';
+                console.log('[DEBUG] Form submission failed due to validation errors.');
                 return; // Exit
             }
 
@@ -734,6 +774,7 @@
                 </div>
             `;
             summaryDetails.innerHTML = summaryHtml;
+            console.log('[DEBUG] Summary details populated.');
 
 
             // Generate Timetable
@@ -770,11 +811,14 @@
             timetableHtml += `</div>`;
             timetableDisplay.innerHTML = timetableHtml;
             timetableDisplay.classList.remove('hidden'); // Ensure timetable is visible
+            console.log('[DEBUG] Timetable generated and displayed.');
 
             finalContactMessage.classList.remove('hidden'); // Show final message
+            console.log('[DEBUG] Final contact message displayed.');
         });
 
-        // Initialize selected class for any pre-selected options (if applicable, though none by default)
+        // Initial setup to hide conditional sections and clear any lingering selected styles
+        // These calls ensure initial state is correct even before user interaction
         updateSelectedClass('program');
         updateSelectedClass('core_need');
         updateSelectedClass('grade_level');
@@ -796,6 +840,7 @@
         timetableDisplay.classList.add('hidden');
         finalContactMessage.classList.add('hidden');
 
+        console.log("Initial setup complete.");
     </script>
 </body>
 </html>
