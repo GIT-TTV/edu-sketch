@@ -433,6 +433,28 @@
 
             const form = event.target;
 
+            // --- 新增：专门用于校验“备考模块”复选框的代码 ---
+const testComponentOptions = document.getElementById('test-component-options');
+if (testComponentOptions) {
+    const firstCheckbox = testComponentOptions.querySelector('input[type="checkbox"]');
+    if (firstCheckbox) {
+        // 检查“备考模块”区域是否可见
+        const isTestPrepVisible = !testComponentOptions.classList.contains('hidden');
+        // 检查是否有任何一个复选框被选中
+        const anyCheckboxChecked = testComponentOptions.querySelector('input[type="checkbox"]:checked');
+
+        // 如果区域可见，但又没有任何一个复选框被选中
+        if (isTestPrepVisible && !anyCheckboxChecked) {
+            // 就给第一个复选框设置一个自定义的错误提示
+            firstCheckbox.setCustomValidity('请至少选择一个需要提升的模块。');
+        } else {
+            // 否则，就清空错误提示，确保能正常提交
+            firstCheckbox.setCustomValidity('');
+        }
+    }
+}
+// --- 新增代码结束 ---
+
             if (!form.checkValidity()) {
                 const firstInvalidField = form.querySelector(':invalid');
                 if (firstInvalidField) {
