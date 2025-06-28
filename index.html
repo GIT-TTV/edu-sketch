@@ -54,15 +54,15 @@
             <div class="question-section" id="q1-section">
                 <h2 class="question-title">1. 您最关注的服务领域是？</h2>
                 <div>
-                    <label class="radio-option"><input type="radio" name="1. 您最关注的服务领域是？" value="国际课程同步辅导" data-key="course_tutoring" required><span>国际课程同步辅导</span><span class="expand-link" data-target="details-courses">[点击详情]</span></label>
+                    <label class="radio-option"><input type="radio" name="1. 您最关注的服务领域是？" value="国际课程辅导" data-key="course_tutoring" required><span>国际课程辅导</span><span class="expand-link" data-target="details-courses">[点击详情]</span></label>
                     <div id="details-courses" class="details-container hidden"></div>
                 </div>
                 <div>
-                    <label class="radio-option"><input type="radio" name="1. 您最关注的服务领域是？" value="标准化考试备考" data-key="test_prep"><span>标准化考试备考</span><span class="expand-link" data-target="details-tests">[点击详情]</span></label>
+                    <label class="radio-option"><input type="radio" name="1. 您最关注的服务领域是？" value="标化考试备考" data-key="test_prep"><span>标化考试备考</span><span class="expand-link" data-target="details-tests">[点击详情]</span></label>
                     <div id="details-tests" class="details-container hidden"></div>
                 </div>
                 <div>
-                    <label class="radio-option"><input type="radio" name="1. 您最关注的服务领域是？" value="学术与学习能力提升" data-key="skill_enhancement"><span>学术与学习能力提升</span><span class="expand-link" data-target="details-skills">[点击详情]</span></label>
+                    <label class="radio-option"><input type="radio" name="1. 您最关注的服务领域是？" value="学术能力提升" data-key="skill_enhancement"><span>学术能力提升</span><span class="expand-link" data-target="details-skills">[点击详情]</span></label>
                     <div id="details-skills" class="details-container hidden"></div>
                 </div>
             </div>
@@ -122,7 +122,7 @@
                     （服务包含：监督完成平台课程作业、在线文字答疑、当日学情反馈）
                 </p>
                 <div class="flex items-center">
-                    <input type="number" id="study-hall-intensity" name="7. “在线自习室”参与强度 (次/周)" class="w-24 p-2 border border-gray-300 rounded-md text-center" value="0" min="0" max="21" step="1">
+                    <input type="number" id="study-hall-intensity" name="7. “在线自习室”参与强度 (次/周)" class="w-24 p-2 border border-gray-300 rounded-md text-center" vplaceholder="4-21" min="4" max="21" step="1" required>
                     <span class="ml-2 text-gray-700">次/周</span>
                 </div>
             </div>
@@ -389,7 +389,26 @@
             updateFee();
         });
         
-        document.getElementById('study-hall-intensity').addEventListener('input', updateFee);
+
+     document.getElementById('study-hall-intensity').addEventListener('input', function(event) {
+    
+     this.setCustomValidity('');
+
+      if (this.value !== '') {
+        const value = parseInt(this.value, 10);
+        if (value < 4) {
+            this.setCustomValidity('强烈建议学员一周不低于2小时自习课');
+        } else if (value > 21) {
+            this.setCustomValidity('不建议学员每周日均自习时间超过1.5小时');
+        }
+    }
+    
+        this.reportValidity(); 
+
+    
+    updateFee();
+});
+
         
         form.addEventListener('click', e => {
             if (e.target.classList.contains('expand-link')) {
