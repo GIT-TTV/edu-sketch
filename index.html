@@ -21,7 +21,16 @@
         .submit-button { background-color: var(--brand-color); color: white; padding: 14px 28px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; width: 100%; transition: background-color 0.3s ease; font-size: 1.125rem; }
         .submit-button:hover { background-color: #4338ca; }
         .hidden { display: none; }
-        .slogan-style { font-family: 'Ma Shan Zheng', cursive; font-size: 1.875rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 1.5rem; background-image: linear-gradient(to bottom right, #FF0000, #0000FF); -webkit-background-clip: text; background-clip: text; color: transparent; text-align: center; }
+        
+        /* 修改点 1: 仅保留Slogan中无法用Tailwind替代的特殊样式 */
+        .slogan-font {
+            font-family: 'Ma Shan Zheng', cursive;
+            background-image: linear-gradient(to bottom right, #FF0000, #0000FF);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
         .expand-link { color: var(--brand-color); font-size: 0.875rem; cursor: pointer; text-decoration: underline; margin-left: auto; font-weight: 500; padding-left: 16px; }
         .details-container { margin-top: 12px; padding: 16px; background-color: #f0f4ff; border-radius: 8px; border: 1px solid #c7d2fe; }
         .details-title { font-weight: 600; color: #3730a3; margin-bottom: 8px; }
@@ -36,8 +45,11 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-4xl font-bold text-center text-gray-800 mb-2 tracking-wider">A维课-国际课程培训报名表</h1>
-        <p class="slogan-style">周周有人教，天天有人帮</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-2 tracking-wider">A维课-国际课程培训报名表</h1>
+        
+        <p class="slogan-font text-center font-semibold my-6 text-2xl md:text-3xl">
+            周周有人教<span class="md:hidden">，</span><br class="md:hidden">天天有人帮
+        </p>
 
         <form id="main-form" action="https://formspree.io/f/xldngdge" method="POST">
             
@@ -212,7 +224,7 @@
                 ],
                 ap: [
                     { key: 'ap_calc', text: 'AP 微积分 AB/BC' }, { key: 'ap_stat', text: 'AP 统计学' }, { key: 'ap_phys', text: 'AP 物理 1/2/C' },
-                    { key: 'ap_chem', text: 'AP 化学' }, { key: 'ap_bio', text: 'AP 生物' }, { key: 'ap_econ', text: 'AP 经济学(微观/宏观)' },
+                    { key: 'ap_chem', text: 'AP 化学' }, { key: 'ap_bio', 'text': 'AP 生物' }, { key: 'ap_econ', text: 'AP 经济学(微观/宏观)' },
                     { key: 'ap_hist', text: 'AP 历史(美国/世界/欧洲)' }, { key: 'ap_psych', text: 'AP 心理学' }, { key: 'ap_cs', text: 'AP 计算机科学 A/原理' },
                     { key: 'ap_eng_lang', text: 'AP 英语语言与写作' }, { key: 'ap_eng_lit', text: 'AP 英语文学与写作' }, { key: 'ap_other', text: '其他AP科目' }
                 ]
@@ -404,7 +416,7 @@
         document.querySelectorAll('input[name="6. 学员期望的课程学习强度是？"]').forEach(radio => {
             const text = radio.nextElementSibling.textContent;
             if (text.includes("1")) radio.dataset.courseIntensity = "1";
-            if (text.includes("2")) radio.dataset.courseIntensity = "2";
+            if (text.includes("2")) radio.datase.courseIntensity = "2";
             if (text.includes("3")) radio.dataset.courseIntensity = "3";
         });
         updateFee();
