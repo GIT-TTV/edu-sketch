@@ -21,20 +21,8 @@
         .submit-button { background-color: var(--brand-color); color: white; padding: 14px 28px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; width: 100%; transition: background-color 0.3s ease; font-size: 1.125rem; }
         .submit-button:hover { background-color: #4338ca; }
         .hidden { display: none; }
-        .slogan-style {
-    font-family: 'Ma Shan Zheng', cursive;
-    /* 使用 clamp() 实现响应式字体 */
-    font-size: clamp(1rem, 6vw, 1.8rem);
-    font-weight: 600;
-    line-height: 1.4; /* 增加行高以优化换行时的表现 */
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-    background-image: linear-gradient(to bottom right, #FF0000, #0000FF);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-align: center;
-}
+        .responsive-title { font-size: clamp(1.75rem, 6.5vw, 2.25rem); }
+        .slogan-style { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(1rem, 6vw, 1.8rem); font-weight: 600; line-height: 1.4; margin-top: 1.5rem; margin-bottom: 1.5rem; background-image: linear-gradient(to bottom right, #FF0000, #0000FF); -webkit-background-clip: text; background-clip: text; color: transparent; text-align: center; }
         .expand-link { color: var(--brand-color); font-size: 0.875rem; cursor: pointer; text-decoration: underline; margin-left: auto; font-weight: 500; padding-left: 16px; }
         .details-container { margin-top: 12px; padding: 16px; background-color: #f0f4ff; border-radius: 8px; border: 1px solid #c7d2fe; }
         .details-title { font-weight: 600; color: #3730a3; margin-bottom: 8px; }
@@ -58,7 +46,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-4xl font-bold text-center text-gray-800 mb-2 tracking-wider">国际课程培训报名表</h1>
+        <h1 class="responsive-title font-bold text-center text-gray-800 mb-2 tracking-wider">国际课程培训报名表</h1>
         <p class="slogan-style">周周有人教，天天有人帮</p>
 
         <form id="main-form" action="https://formspree.io/f/xldngdge" method="POST">
