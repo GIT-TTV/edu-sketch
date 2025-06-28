@@ -451,6 +451,53 @@
 
             const form = event.target;
 
+ // --- 新增：专门用于校验“至少填写一种联系方式”的代码 ---
+            const contactPhone = document.getElementById('contact_phone').value.trim();
+            const contactWechat = document.getElementById('contact_wechat').value.trim();
+            const contactEmail = document.getElementById('contact_email').value.trim();
+            const otherContact = document.getElementById('other_contact').value.trim();
+
+            if (!contactPhone && !contactWechat && !contactEmail && !otherContact) {
+                // 如果所有联系方式都为空
+                const contactSection = document.getElementById('contact-section');
+                if (contactSection) {
+                    // 滚动到联系方式区域
+                    contactSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center'
+                    });
+
+                    // 高亮该区域
+                    contactSection.classList.add('field-error');
+                    setTimeout(() => {
+                        contactSection.classList.remove('field-error');
+                    }, 3000);
+                }
+
+                // 在按钮下方显示自定义错误提示
+                let statusMessage = form.querySelector('.custom-error-message');
+                if (!statusMessage) {
+                    statusMessage = document.createElement('p');
+                    statusMessage.className = 'custom-error-message text-center text-red-600 mt-2';
+                    form.insertBefore(statusMessage, form.querySelector('.submit-button').nextSibling);
+                }
+                statusMessage.textContent = '请您填写至少一种联系方式。';
+                
+                // 聚焦到第一个联系方式输入框，以便用户输入
+                document.getElementById('contact_phone').focus();
+
+                return; // 终止提交
+            } else {
+                // 如果用户填写了至少一种，就清除可能存在的旧提示
+                let statusMessage = form.querySelector('.custom-error-message');
+                if (statusMessage) {
+                    statusMessage.textContent = '';
+                }
+            }
+            // --- 新增代码结束 ---
+
+
+
 // --- 新增：专门用于校验“备考模块”复选框的代码 ---
 const testComponentOptions = document.getElementById('test-component-options');
 if (testComponentOptions) {
@@ -529,7 +576,7 @@ if (testComponentOptions) {
                 if (response.ok) {
                     form.reset();
                     form.style.display = 'none';
-                    status.textContent = "感谢您的提交，我们将尽快与您取得联系！";
+                    status.textContent = "感谢提交，我们尽快与您取得联系！";
                     status.style.color = 'green';
                     form.parentNode.insertBefore(status, form.nextSibling);
                 } else {
