@@ -428,32 +428,64 @@
         });
         updateFee();
 
+const validateDynamicInputs = () => {
+            // 这是一个内部帮助函数，用于检查单个动态区域
+            const check = (containerId, inputSelector, checkedSelector, message) => {
+                const container = document.getElementById(containerId);
+
+                // 如果容器不存在，或者它是隐藏的，那么它内部的输入框就不是必填项
+                if (!container || container.classList.contains('hidden')) {
+                    // 如果容器之前可能有效，我们需要清除掉可能存在的旧错误提示
+                    const firstInput = container ? container.querySelector(inputSelector) : null;
+                    if (firstInput) {
+                        firstInput.setCustomValidity('');
+                    }
+                    return; // 结束此区域的检查
+                }
+
+                // 如果容器是可见的，我们就要检查它是否已被填写
+                const firstInput = container.querySelector(inputSelector);
+                const isChecked = container.querySelector(checkedSelector);
+
+                if (firstInput) {
+                    if (!isChecked) {
+                        // 如果没填写，就设置自定义错误信息
+                        firstInput.setCustomValidity(message);
+                    } else {
+                        // 如果已填写，就清空错误信息
+                        firstInput.setCustomValidity('');
+                    }
+                }
+            };
+
+            // --- 对所有动态问题，统一调用检查函数 ---
+
+            // Q1 的子问题: 课程体系
+            check('course-system-options', 'input[type="radio"]', 'input[type="radio"]:checked', '请选择一个课程体系。');
+            
+            // Q1 的子问题: 具体科目
+            check('course-subject-container', 'input[type="radio"]', 'input[type="radio"]:checked', '请选择具体科目。');
+
+            // Q1 的子问题: 备考的考试类型
+            check('test-prep-options', 'input[type="radio"]', 'input[type="radio"]:checked', '请选择备考的考试。');
+            
+            // Q1 的子问题: 备考模块 (你原来唯一处理了的那个)
+            check('test-component-options', 'input[type="checkbox"]', 'input[type="checkbox"]:checked', '请至少选择一个需要提升的模块。');
+
+            // Q1 的子问题: 核心能力
+            // 注意：这个区域的ID是details-skills，它本身就是容器
+            check('details-skills', 'input[type="radio"]', 'input[type="radio"]:checked', '请选择您想提升的核心能力。');
+            
+            // Q5 的子问题: 英语证书的详细分数
+            check('english-certificate-sub-options', 'input[type="radio"]', 'input[type="radio"]:checked', '请选择您的分数/等级。');
+        };
+        
         async function handleSubmit(event) {
             event.preventDefault();
 
             const form = event.target;
 
-            // --- 新增：专门用于校验“备考模块”复选框的代码 ---
-const testComponentOptions = document.getElementById('test-component-options');
-if (testComponentOptions) {
-    const firstCheckbox = testComponentOptions.querySelector('input[type="checkbox"]');
-    if (firstCheckbox) {
-        // 检查“备考模块”区域是否可见
-        const isTestPrepVisible = !testComponentOptions.classList.contains('hidden');
-        // 检查是否有任何一个复选框被选中
-        const anyCheckboxChecked = testComponentOptions.querySelector('input[type="checkbox"]:checked');
-
-        // 如果区域可见，但又没有任何一个复选框被选中
-        if (isTestPrepVisible && !anyCheckboxChecked) {
-            // 就给第一个复选框设置一个自定义的错误提示
-            firstCheckbox.setCustomValidity('请至少选择一个需要提升的模块。');
-        } else {
-            // 否则，就清空错误提示，确保能正常提交
-            firstCheckbox.setCustomValidity('');
-        }
-    }
-}
-// --- 新增代码结束 ---
+            validateDynamicInputs();
 
             if (!form.checkValidity()) {
                 const firstInvalidField = form.querySelector(':invalid');
@@ -469,6 +501,10 @@ if (testComponentOptions) {
                             parentSection.classList.remove('field-error');
                         }, 3000);
                     }
+                    const parentLabel = firstInvalidField.closest('label');
+                    if (parentLabel) {
+                        parentLabel.focus();
+                    } else {
                     firstInvalidField.focus();
                 }
                 return;
