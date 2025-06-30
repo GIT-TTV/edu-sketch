@@ -12,7 +12,7 @@
         html { scroll-behavior: smooth;font-size: clamp(14px, 1.5vw, 16px) }
         body { font-family: 'Noto Sans SC', sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; padding: 20px; }
         .container { background-color: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); width: 100%; max-width: 768px; margin: 20px 0; }
-        .question-section { margin-bottom: 24px; padding: 16px; background-color: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .question-section { margin-bottom: 24px; padding: 16px; background-color: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb; transition: all 0.3s ease-in-out; }
         .question-title { font-size: 1.25rem; font-weight: 600; color: #1f2937; margin-bottom: 16px; }
         .radio-option, .checkbox-option { display: flex; align-items: center; padding: 12px 16px; margin-bottom: 8px; background-color: #ffffff; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; font-size: 1rem; }
         .radio-option:hover, .checkbox-option:hover { border-color: var(--brand-color); }
@@ -20,6 +20,7 @@
         input[type="radio"], input[type="checkbox"] { margin-right: 12px; accent-color: var(--brand-color); transform: scale(1.2); flex-shrink: 0; }
         .submit-button { background-color: var(--brand-color); color: white; padding: 14px 28px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; width: 100%; transition: background-color 0.3s ease; font-size: 1.125rem; }
         .submit-button:hover { background-color: #4338ca; }
+        .submit-button:disabled { background-color: #a5b4fc; cursor: not-allowed; }
         .hidden { display: none; }
         .responsive-title { font-size: clamp(1.75rem, 6.5vw, 2.25rem); }
         .slogan-style { font-family: 'Ma Shan Zheng', cursive; font-size: clamp(1rem, 6vw, 1.8rem); font-weight: 600; line-height: 1.4; margin-top: 1.5rem; margin-bottom: 1.5rem; background-image: linear-gradient(to bottom right, #FF0000, #0000FF); -webkit-background-clip: text; background-clip: text; color: transparent; text-align: center; }
@@ -29,19 +30,12 @@
         .fee-estimator { padding: 16px; background-color: #f3f4f6; border: 2px dashed #d1d5db; border-radius: 8px; }
         .value-proposition-slogan { font-size: 1rem; color: var(--brand-color); font-weight: bold; margin-top: 12px; }
         .form-input { margin-top: 4px; display: block; width: 100%; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 8px; }
-        /* Style for native validation bubbles */
-        input:invalid {
-            box-shadow: none; /* Optional: remove default red glow in some browsers */
+        input:invalid { box-shadow: none; }
+        .field-error {
+            border: 2px solid #ef4444;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+            border-radius: 12px;
         }
-
-        /* 用于高亮显示未完成问题的样式 */
-.field-error {
-    border: 2px solid #ef4444; /* 一个醒目的红色边框 */
-    box-shadow: 0 0 12px rgba(239, 68, 68, 0.6); /* 红色光晕效果 */
-    border-radius: 12px; /* 匹配原有的圆角 */
-    transition: all 0.3s ease-in-out;
-}
-        
     </style>
 </head>
 <body>
@@ -49,7 +43,7 @@
         <h1 class="responsive-title font-bold text-center text-gray-800 mb-2 tracking-wider">国际课程培训报名表</h1>
         <p class="slogan-style">周周有人教，天天有人帮</p>
 
-        <form id="main-form" action="https://formspree.io/f/xldngdge" method="POST">
+        <form id="main-form" action="https://formspree.io/f/xldngdge" method="POST" novalidate>
             
             <div class="question-section" id="q1-section">
                 <h2 class="question-title">1. 您最关注的服务领域是？</h2>
@@ -122,7 +116,7 @@
                     （服务包含：监督完成平台课程作业、在线文字答疑、当日学情反馈）
                 </p>
                 <div class="flex items-center">
-                    <input type="number" id="study-hall-intensity" name="7. “在线自习室”参与强度 (次/周)" class="w-24 p-2 border border-gray-300 rounded-md text-center" vplaceholder="4-21" min="4" max="21" step="1" required>
+                    <input type="number" id="study-hall-intensity" name="7. “在线自习室”参与强度 (次/周)" class="w-24 p-2 border border-gray-300 rounded-md text-center" placeholder="4-21" min="4" max="21" step="1" required>
                     <span class="ml-2 text-gray-700">次/周</span>
                 </div>
             </div>
@@ -143,7 +137,7 @@
             <div class="question-section" id="contact-section">
                 <h2 class="question-title">您的联系方式</h2>
                  <div>
-                    <label for="contact_name" class="block text-sm font-medium text-gray-700">您的称呼</p>
+                    <label for="contact_name" class="block text-sm font-medium text-gray-700">您的称呼</label>
                     <input type="text" name="您的称呼" id="contact_name" class="form-input" required oninvalid="this.setCustomValidity('请填写您的称呼')" oninput="this.setCustomValidity('')">
                 </div>
                 <div class="mt-4">
@@ -258,10 +252,10 @@
             const label = document.createElement('label');
             label.className = type === 'radio' ? 'radio-option' : 'checkbox-option';
             const input = document.createElement('input');
-            input.type = type; 
-            input.name = name; 
-            input.value = item.text; // Use Chinese text for value
-            input.dataset.key = item.key; // Store original key for JS logic
+            input.type = type;
+            input.name = name;
+            input.value = item.text;
+            input.dataset.key = item.key;
             if (isRequired) {
                 input.required = true;
             }
@@ -273,38 +267,25 @@
         };
 
         const populateDetails = (container, categoryKey) => {
-            container.innerHTML = ''; // Clear previous content
+            container.innerHTML = '';
             if (categoryKey === 'course_tutoring') {
-                container.innerHTML = `
-                    <h3 class="details-title">请选择课程体系:</h3>
-                    <div id="course-system-options"></div>
-                    <div id="course-subject-container" class="mt-4 hidden"></div>`;
+                container.innerHTML = `<h3 class="details-title">请选择课程体系:</h3><div id="course-system-options"></div><div id="course-subject-container" class="mt-4 hidden"></div>`;
                 const systemContainer = container.querySelector('#course-system-options');
-                allData.courseSystems.forEach((system, index) => systemContainer.appendChild(createOption(system, '1a. 请选择课程体系', 'radio', index === 0)));
-
+                allData.courseSystems.forEach((system) => systemContainer.appendChild(createOption(system, '1a. 请选择课程体系', 'radio', true)));
             } else if (categoryKey === 'test_prep') {
-                container.innerHTML = `
-                    <h3 class="details-title">请选择备考的考试:</h3>
-                    <div id="test-prep-options"></div>
-                    <div id="test-component-options" class="mt-4 hidden"></div>`;
+                container.innerHTML = `<h3 class="details-title">请选择备考的考试:</h3><div id="test-prep-options"></div><div id="test-component-options" class="mt-4 hidden"></div>`;
                 const testContainer = container.querySelector('#test-prep-options');
-                allData.tests.forEach((test, index) => testContainer.appendChild(createOption(test, '1a. 请选择备考的考试', 'radio', index === 0)));
-
+                allData.tests.forEach((test) => testContainer.appendChild(createOption(test, '1a. 请选择备考的考试', 'radio', true)));
             } else if (categoryKey === 'skill_enhancement') {
                 container.innerHTML = `<h3 class="details-title">请选择您想提升的核心能力:</h3>`;
-                allData.skills.forEach((skill, index) => container.appendChild(createOption(skill, '1a. 请选择您想提升的核心能力', 'radio', index === 0)));
+                allData.skills.forEach((skill) => container.appendChild(createOption(skill, '1a. 请选择您想提升的核心能力', 'radio', true)));
             }
         };
 
         const handleServiceAreaChange = (targetRadio) => {
-            document.querySelectorAll('#q1-section .details-container').forEach(d => { 
-                d.classList.add('hidden');
-                d.innerHTML = '';
-            });
-            
+            document.querySelectorAll('#q1-section .details-container').forEach(d => { d.classList.add('hidden'); d.innerHTML = ''; });
             const targetDiv = targetRadio.closest('div').querySelector('.details-container');
             if(!targetDiv) return;
-            
             targetDiv.classList.remove('hidden');
             populateDetails(targetDiv, targetRadio.dataset.key);
         };
@@ -312,17 +293,15 @@
         const handleCourseSystemChange = (systemKey) => {
             const container = document.getElementById('course-subject-container');
             if(!container) return;
-
             container.innerHTML = `<h3 class="details-title">请选择具体科目:</h3>`;
             const subjects = allData.courseSubjects[systemKey] || [];
-            subjects.forEach((subject, index) => container.appendChild(createOption(subject, '1b. 请选择具体科目', 'radio', index === 0)));
+            subjects.forEach((subject) => container.appendChild(createOption(subject, '1b. 请选择具体科目', 'radio', true)));
             container.classList.remove('hidden');
         };
         
         const handleTestPrepChange = (testKey, testText) => {
              const container = document.getElementById('test-component-options');
              if(!container) return;
-             
              const test = allData.tests.find(t => t.key === testKey);
              if (test && test.components) {
                 const nameForCheckboxGroup = `1b. ${testText} - 请选择提升模块 (可多选)`;
@@ -336,14 +315,12 @@
             const subSection = document.getElementById('english-certificate-sub-section');
             if(!subSection) return;
             const subOptionsContainer = subSection.querySelector('#english-certificate-sub-options');
-            subOptionsContainer.innerHTML = ''; // Clear previous options
-
+            subOptionsContainer.innerHTML = '';
             if(allData.englishSubScores[certKey] && allData.englishSubScores[certKey].length > 0){
                 subSection.classList.remove('hidden');
-                allData.englishSubScores[certKey].forEach((score, index) => {
-                    const isRequired = index === 0;
-                    const scoreItem = { key: score, text: score }; // Create an item object for createOption
-                    subOptionsContainer.appendChild(createOption(scoreItem, '5a. 请选择您的分数/等级', 'radio', isRequired))
+                allData.englishSubScores[certKey].forEach((score) => {
+                    const scoreItem = { key: score, text: score };
+                    subOptionsContainer.appendChild(createOption(scoreItem, '5a. 请选择您的分数/等级', 'radio', true))
                 });
             } else {
                 subSection.classList.add('hidden');
@@ -355,31 +332,24 @@
             const courseIntensity = courseIntensityInput ? parseInt(courseIntensityInput.dataset.courseIntensity, 10) : 0;
             const studyHallInput = document.getElementById('study-hall-intensity');
             let studyHallIntensity = studyHallInput ? parseInt(studyHallInput.value, 10) : 0;
-
             if (isNaN(studyHallIntensity) || !Number.isInteger(studyHallIntensity) || studyHallIntensity < 0 ) {
                 studyHallIntensity = 0;
             } else if (studyHallIntensity > BIZ_PARAMS.STUDY_HALL_MAX_SESSIONS) {
                 studyHallIntensity = BIZ_PARAMS.STUDY_HALL_MAX_SESSIONS; 
                 if(studyHallInput) studyHallInput.value = BIZ_PARAMS.STUDY_HALL_MAX_SESSIONS;
             }
-
             const weeklyCourseCost = courseIntensity * BIZ_PARAMS.COURSE_RATE_PER_SESSION;
             const weeklyStudyHallCost = studyHallIntensity * BIZ_PARAMS.STUDY_HALL_RATE_PER_SESSION;
             const monthlyCost = (weeklyCourseCost + weeklyStudyHallCost) * BIZ_PARAMS.MONTHLY_MULTIPLIER;
-            
             document.getElementById('estimated-fee').textContent = `¥ ${Math.round(monthlyCost)}`;
             document.getElementById('fee-calculation-details').textContent = `* 基于您选择的【每周${courseIntensity}次课程 + 每周${studyHallIntensity}次自习室】强度`;
         };
         
-        // --- Event Listeners Setup ---
         form.addEventListener('change', e => {
             if (e.target.type === 'radio') {
                 const name = e.target.name;
-                document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
-                    radio.closest('.radio-option')?.classList.remove('selected');
-                });
+                document.querySelectorAll(`input[name="${name}"]`).forEach(radio => radio.closest('.radio-option')?.classList.remove('selected'));
                 e.target.closest('.radio-option')?.classList.add('selected');
-
                 const nameAttr = e.target.name;
                 if (nameAttr === '1. 您最关注的服务领域是？') handleServiceAreaChange(e.target);
                 else if (nameAttr === '1a. 请选择课程体系') handleCourseSystemChange(e.target.dataset.key);
@@ -388,27 +358,8 @@
             }
             updateFee();
         });
-        
 
-     document.getElementById('study-hall-intensity').addEventListener('input', function(event) {
-    
-     this.setCustomValidity('');
-
-      if (this.value !== '') {
-        const value = parseInt(this.value, 10);
-        if (value < 4) {
-            this.setCustomValidity('强烈建议学员一周不低于2小时自习课');
-        } else if (value > 21) {
-            this.setCustomValidity('不建议学员每周日均自习时间超过1.5小时');
-        }
-    }
-    
-        this.reportValidity(); 
-
-    
-    updateFee();
-});
-
+        document.getElementById('study-hall-intensity').addEventListener('input', updateFee);
         
         form.addEventListener('click', e => {
             if (e.target.classList.contains('expand-link')) {
@@ -421,180 +372,114 @@
                 } else {
                     const targetId = e.target.dataset.target;
                     const targetDiv = document.getElementById(targetId);
-                    if (targetDiv) {
-                       targetDiv.classList.toggle('hidden');
-                    }
+                    if (targetDiv) targetDiv.classList.toggle('hidden');
                 }
             }
         });
 
-        // --- Initial Call ---
-        // Initially set data-key for course intensity radios
-        document.querySelectorAll('input[name="6. 学员期望的课程学习强度是？"]').forEach(radio => {
-            const text = radio.nextElementSibling.textContent;
-            if (text.includes("1")) radio.dataset.courseIntensity = "1";
-            if (text.includes("2")) radio.dataset.courseIntensity = "2";
-            if (text.includes("3")) radio.dataset.courseIntensity = "3";
-        });
         updateFee();
-    });
-
-        // Wait for the entire page to load
-        document.addEventListener('DOMContentLoaded', function() {
-        // --- All your existing script code goes here ---
-
-        // --- Add the new code below ---
-        const form = document.getElementById('main-form');
 
         async function handleSubmit(event) {
-            event.preventDefault(); // 阻止表单默认提交行为
-
+            event.preventDefault();
             const form = event.target;
 
- // --- 新增：专门用于校验“至少填写一种联系方式”的代码 ---
+            // --- 步骤 1: 清理工作 ---
+            form.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+            let statusMessage = form.querySelector('.custom-error-message');
+            if (statusMessage) statusMessage.remove();
+            
+            // 安全地清理自定义错误
+            document.getElementById('contact_phone').setCustomValidity('');
+            const firstCheckbox = document.querySelector('#test-component-options input[type="checkbox"]');
+            if (firstCheckbox) { // 防御性检查
+                firstCheckbox.setCustomValidity('');
+            }
+
+            // --- 步骤 2: 执行所有自定义验证 ---
+            // 规则1: 备考模块至少选一
+            const testComponentOptions = document.getElementById('test-component-options');
+            if (testComponentOptions && !testComponentOptions.classList.contains('hidden')) {
+                const anyCheckboxChecked = testComponentOptions.querySelector('input[type="checkbox"]:checked');
+                if (!anyCheckboxChecked && firstCheckbox) { // 防御性检查
+                    firstCheckbox.setCustomValidity('请至少选择一个需要提升的模块。');
+                }
+            }
+            
+            // 规则2: 联系方式至少填一
             const contactPhone = document.getElementById('contact_phone').value.trim();
             const contactWechat = document.getElementById('contact_wechat').value.trim();
             const contactEmail = document.getElementById('contact_email').value.trim();
             const otherContact = document.getElementById('other_contact').value.trim();
-
             if (!contactPhone && !contactWechat && !contactEmail && !otherContact) {
-                // 如果所有联系方式都为空
-                const contactSection = document.getElementById('contact-section');
-                if (contactSection) {
-                    // 滚动到联系方式区域
-                    contactSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-
-                    // 高亮该区域
-                    contactSection.classList.add('field-error');
-                    setTimeout(() => {
-                        contactSection.classList.remove('field-error');
-                    }, 3000);
-                }
-
-                // 在按钮下方显示自定义错误提示
-                let statusMessage = form.querySelector('.custom-error-message');
-                if (!statusMessage) {
-                    statusMessage = document.createElement('p');
-                    statusMessage.className = 'custom-error-message text-center text-red-600 mt-2';
-                    form.insertBefore(statusMessage, form.querySelector('.submit-button').nextSibling);
-                }
-                statusMessage.textContent = '请您填写至少一种联系方式。';
-                
-                // 聚焦到第一个联系方式输入框，以便用户输入
-                document.getElementById('contact_phone').focus();
-
-                return; // 终止提交
-            } else {
-                // 如果用户填写了至少一种，就清除可能存在的旧提示
-                let statusMessage = form.querySelector('.custom-error-message');
-                if (statusMessage) {
-                    statusMessage.textContent = '';
-                }
+                document.getElementById('contact_phone').setCustomValidity('请您填写至少一种联系方式。');
             }
-            // --- 新增代码结束 ---
 
-
-
-// --- 新增：专门用于校验“备考模块”复选框的代码 ---
-const testComponentOptions = document.getElementById('test-component-options');
-if (testComponentOptions) {
-    const firstCheckbox = testComponentOptions.querySelector('input[type="checkbox"]');
-    if (firstCheckbox) {
-        // 检查“备考模块”区域是否可见
-        const isTestPrepVisible = !testComponentOptions.classList.contains('hidden');
-        // 检查是否有任何一个复选框被选中
-        const anyCheckboxChecked = testComponentOptions.querySelector('input[type="checkbox"]:checked');
-
-        // 如果区域可见，但又没有任何一个复选框被选中
-        if (isTestPrepVisible && !anyCheckboxChecked) {
-            // 就给第一个复选框设置一个自定义的错误提示
-            firstCheckbox.setCustomValidity('请至少选择一个需要提升的模块。');
-        } else {
-            // 否则，就清空错误提示，确保能正常提交
-            firstCheckbox.setCustomValidity('');
-        }
-    }
-}
-// --- 新增代码结束 ---
-
-            // 步骤1: 检查表单是否所有必填项都已完成
+            // --- 步骤 3: 触发总体验证并处理界面反馈 ---
             if (!form.checkValidity()) {
-                // 步骤2: 如果未完成，找到第一个无效的输入控件
                 const firstInvalidField = form.querySelector(':invalid');
 
                 if (firstInvalidField) {
-                    // 步骤3: 找到该控件所在的整个问题区域
                     const parentSection = firstInvalidField.closest('.question-section');
-                    
                     if (parentSection) {
-                        // 步骤4:【滚动】平滑地将屏幕滚动到该问题区域
-                        parentSection.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
-                        });
-
-                        // 步骤5:【高亮】为该区域添加我们定义的错误样式
+                        parentSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
                         parentSection.classList.add('field-error');
-                        
-                        // 步骤6: 3秒后自动移除高亮，避免一直红着
-                        setTimeout(() => {
-                            parentSection.classList.remove('field-error');
-                        }, 3000);
+                        setTimeout(() => { parentSection.classList.remove('field-error'); }, 3000);
                     }
                     
-                    // 步骤7: 让浏览器在该控件上弹出原生的验证提示泡泡
+                    // 聚焦以触发浏览器默认提示（如果浏览器支持）
                     firstInvalidField.focus();
+
+                    // 对自定义错误，显示一个更明确的提示
+                    if (firstInvalidField.validationMessage.includes('联系方式')) {
+                         statusMessage = document.createElement('p');
+                         statusMessage.className = 'custom-error-message text-center text-red-600 mt-2';
+                         statusMessage.textContent = '请您填写至少一种联系方式。';
+                         document.getElementById('contact-section').appendChild(statusMessage);
+                    }
                 }
-                
-                // 步骤8: 终止函数，不执行后续的提交操作
-                return; 
+                return;
             }
 
-            // 如果代码能执行到这里，说明表单是完整的，可以提交
-            const status = document.createElement('p');
-            status.className = 'text-center text-lg mt-4';
-            
+            // --- 步骤 4: 验证通过，提交表单 ---
             const submitButton = form.querySelector('.submit-button');
             const originalButtonText = submitButton.textContent;
             submitButton.disabled = true;
             submitButton.textContent = '正在提交...';
-
+            
+            const finalStatus = document.createElement('p');
+            finalStatus.className = 'text-center text-lg mt-4';
+            
             const data = new FormData(form);
             
             try {
                 const response = await fetch(form.action, {
                     method: form.method,
                     body: data,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
+                    headers: { 'Accept': 'application/json' }
                 });
 
                 if (response.ok) {
-                    form.reset();
                     form.style.display = 'none';
-                    status.textContent = "感谢提交，我们尽快与您取得联系！";
-                    status.style.color = 'green';
-                    form.parentNode.insertBefore(status, form.nextSibling);
+                    const successTitle = document.querySelector('.responsive-title');
+                    if(successTitle) successTitle.textContent = '提交成功!';
+                    const slogan = document.querySelector('.slogan-style');
+                    if(slogan) slogan.style.display = 'none';
+                    
+                    finalStatus.textContent = "感谢您的提交，我们专业的课程顾问会尽快与您取得联系！";
+                    finalStatus.style.color = 'green';
+                    form.parentNode.appendChild(finalStatus);
                 } else {
                     const responseData = await response.json();
-                    if (Object.hasOwn(responseData, 'errors')) {
-                        status.textContent = responseData["errors"].map(error => error["message"]).join(", ");
-                    } else {
-                        status.textContent = "糟糕，提交时发生了错误。请稍后重试。";
-                    }
-                    status.style.color = 'red';
-                    form.parentNode.insertBefore(status, submitButton.nextSibling);
+                    finalStatus.textContent = responseData.hasOwnProperty('errors') ? responseData["errors"].map(e => e["message"]).join(", ") : "提交失败，请稍后重试。";
+                    finalStatus.style.color = 'red';
+                    submitButton.parentElement.insertBefore(finalStatus, submitButton);
                     submitButton.disabled = false;
                     submitButton.textContent = originalButtonText;
                 }
             } catch (error) {
-                status.textContent = "网络错误，无法提交表单。请检查您的网络连接。";
-                status.style.color = 'red';
-                form.parentNode.insertBefore(status, submitButton.nextSibling);
+                finalStatus.textContent = "网络错误，无法提交。请检查您的网络连接后重试。";
+                finalStatus.style.color = 'red';
+                submitButton.parentElement.insertBefore(finalStatus, submitButton);
                 submitButton.disabled = false;
                 submitButton.textContent = originalButtonText;
             }
